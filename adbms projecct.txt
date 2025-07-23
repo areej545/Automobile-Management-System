@@ -1,0 +1,1836 @@
+--creating database
+CREATE DATABASE AutomobileManagementSystem;
+
+USE AutomobileManagementSystem;
+
+--creating tables
+CREATE TABLE Vehicles (
+    VehicleID INT PRIMARY KEY IDENTITY(1,1),
+    Make VARCHAR(50) NOT NULL,
+    Model VARCHAR(50) NOT NULL,
+    Year INT NOT NULL,
+    Color VARCHAR(20) NOT NULL,
+    Type VARCHAR(20) NOT NULL,
+    RentStatus VARCHAR(10) CHECK (RentStatus IN ('available', 'rented')),
+    SaleStatus VARCHAR(10) CHECK (SaleStatus IN ('available', 'sold'))
+);
+
+CREATE TABLE Customers (
+    CustomerID INT PRIMARY KEY IDENTITY(1,1),
+    Name VARCHAR(100) NOT NULL,
+    Email VARCHAR(100) UNIQUE NOT NULL,
+    Phone VARCHAR(20) NOT NULL,
+    Address VARCHAR(200) NOT NULL
+);
+
+CREATE TABLE Sales (
+    SaleID INT PRIMARY KEY IDENTITY(1,1),
+    VehicleID INT NOT NULL,
+    CustomerID INT NOT NULL,
+    SaleDate DATE NOT NULL,
+    Price DECIMAL(10, 2) NOT NULL,
+    CONSTRAINT FK_Sales_Vehicles FOREIGN KEY (VehicleID) REFERENCES Vehicles(VehicleID),
+    CONSTRAINT FK_Sales_Customers FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+);
+
+CREATE TABLE Rentals (
+    RentalID INT PRIMARY KEY IDENTITY(1,1),
+    VehicleID INT NOT NULL,
+    CustomerID INT NOT NULL,
+    RentalDate DATE NOT NULL,
+    ReturnDate DATE,
+    RentalFee DECIMAL(10, 2) NOT NULL,
+    CONSTRAINT FK_Rentals_Vehicles FOREIGN KEY (VehicleID) REFERENCES Vehicles(VehicleID),
+    CONSTRAINT FK_Rentals_Customers FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+);
+
+CREATE TABLE ServiceRecords (
+    ServiceID INT PRIMARY KEY IDENTITY(1,1),
+    VehicleID INT NOT NULL,
+    CustomerID INT NOT NULL,
+    ServiceDate DATE NOT NULL,
+    ServiceType VARCHAR(50) NOT NULL,
+    Cost DECIMAL(10, 2) NOT NULL,
+    CONSTRAINT FK_ServiceRecords_Vehicles FOREIGN KEY (VehicleID) REFERENCES Vehicles(VehicleID),
+    CONSTRAINT FK_ServiceRecords_Customers FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+);
+
+CREATE TABLE Employees (
+    EmployeeID INT PRIMARY KEY IDENTITY(1,1),
+    Name VARCHAR(100) NOT NULL,
+    Email VARCHAR(100) UNIQUE NOT NULL,
+    Phone VARCHAR(20) NOT NULL,
+    Role VARCHAR(20) NOT NULL
+);
+
+
+--inserting records
+
+INSERT INTO Vehicles (Make, Model, Year, Color, Type, RentStatus, SaleStatus)
+VALUES 
+('Toyota', 'Corolla', 2015, 'White', 'Sedan', 'available', 'available'),
+('Honda', 'Civic', 2018, 'Black', 'Sedan', 'available', 'available'),
+('Ford', 'Fusion', 2012, 'Silver', 'Sedan', 'available', 'available'),
+('Hyundai', 'Elantra', 2019, 'Red', 'Sedan', 'available', 'available'),
+('Nissan', 'Altima', 2014, 'Gray', 'Sedan', 'available', 'available'),
+('Toyota', 'Camry', 2016, 'Blue', 'Sedan', 'available', 'available'),
+('Honda', 'Accord', 2017, 'White', 'Sedan', 'available', 'available'),
+('Ford', 'Focus', 2013, 'Black', 'Hatchback', 'available', 'available'),
+('Hyundai', 'Sonata', 2018, 'Silver', 'Sedan', 'available', 'available'),
+('Nissan', 'Sentra', 2015, 'Red', 'Sedan', 'available', 'available');
+
+
+INSERT INTO Customers (Name, Email, Phone, Address)
+VALUES 
+('Ahmed Khan', 'ahmed.khan@example.com', '123-456-7890', 'Shamsabad'),
+('Ahsan Ali', 'ahsan.ali@example.com', '987-654-3210', 'Rehmanabad'),
+('Ali Hamza', 'ali.hamza@example.com', '555-123-4567', 'Islamabad'),
+('Anas Shah', 'anas.shah@example.com', '901-234-5678', 'Bahria Town'),
+('Haider Ali', 'haider.ali@example.com', '111-222-3333', 'Shamsabad'),
+('Hanan Khan', 'hanan.khan@example.com', '666-777-8888', 'Rehmanabad'),
+('Malik Arham', 'malik.arham@example.com', '333-444-5555', 'Islamabad'),
+('Ch Aqib', 'ch.aqib@example.com', '777-888-9999', 'Bahria Town'),
+('Imran Khan', 'imran.khan@example.com', '888-999-0000', 'Shamsabad'),
+('Zain Habib', 'zain.habib@example.com', '999-000-1111', 'Rehmanabad');
+
+
+
+INSERT INTO Sales (VehicleID, CustomerID, SaleDate, Price)
+VALUES 
+(1, 1, '2020-01-01', 15000.00),
+(2, 2, '2020-02-01', 18000.00),
+(3, 3, '2020-03-01', 12000.00),
+(4, 4, '2020-04-01', 20000.00),
+(5, 5, '2020-05-01', 25000.00),
+(6, 6, '2020-06-01', 22000.00),
+(7, 7, '2020-07-01', 28000.00),
+(8, 8, '2020-08-01', 30000.00),
+(9, 9, '2020-09-01', 35000.00),
+(10, 10, '2020-10-01', 38000.00);
+
+INSERT INTO Rentals (VehicleID, CustomerID, RentalDate, ReturnDate, RentalFee)
+VALUES 
+(1, 1, '2020-01-01', '2020-01-15', 500.00),
+(2, 2, '2020-02-01', '2020-02-15', 600.00),
+(3, 3, '2020-03-01', '2020-03-15', 400.00),
+(4, 4, '2020-04-01', '2020-04-15', 700.00),
+(5, 5, '2020-05-01', '2020-05-15', 800.00),
+(6, 6, '2020-06-01', '2020-06-15', 900.00),
+(7, 7, '2020-07-01', '2020-07-15', 1000.00),
+(8, 8, '2020-08-01', '2020-08-15', 1100.00),
+(9, 9, '2020-09-01', '2020-09-15', 1200.00),
+(10, 10, '2020-10-01', '2020-10-15', 1300.00);
+
+
+INSERT INTO ServiceRecords (VehicleID, CustomerID, ServiceDate, ServiceType, Cost)
+VALUES 
+(1, 1, '2020-01-01', 'Oil Change', 50.00),
+(2, 2, '2020-02-01', 'Tire Rotation', 30.00),
+(3, 3, '2020-03-01', 'Brake Repair', 200.00),
+(4, 4, '2020-04-01', 'Battery Replacement', 100.00),
+(5, 5, '2020-05-01', 'Oil Change', 50.00),
+(6, 6, '2020-06-01', 'Tire Rotation', 30.00),
+(7, 7, '2020-07-01', 'Brake Repair', 200.00),
+(8, 8, '2020-08-01', 'Engine Repair', 1000.00),
+(9, 9, '2020-09-01', 'Battery Replacement', 100.00),
+(10, 10, '2020-10-01', 'Oil Change', 50.00);
+
+INSERT INTO Employees (Name, Email, Phone, Role)
+VALUES 
+('Saif Ali', 'saif.ali@example.com', '123-456-7890', 'Salesperson'),
+('Ahad Khan', 'ahad.khan@example.com', '987-654-3210', 'Mechanic'),
+('Amir Khan', 'amir.khan@example.com', '555-123-4567', 'Service Manager'),
+('Salman Arif', 'salman.arif@example.com', '901-234-5678', 'Receptionist'),
+('Laraib Butt', 'laraib.butt@example.com', '111-222-3333', 'Sales Manager');
+
+
+
+--creating procedures
+
+
+CREATE PROCEDURE sp_AddVehicle
+    @Make VARCHAR(50),
+    @Model VARCHAR(50),
+    @Year INT,
+    @Color VARCHAR(20),
+    @Type VARCHAR(20)
+AS
+BEGIN
+    INSERT INTO Vehicles (Make, Model, Year, Color, Type, RentStatus, SaleStatus)
+    VALUES (@Make, @Model, @Year, @Color, @Type, 'available', 'available')
+END
+DROP PROCEDURE sp_AddVehicle;
+
+
+CREATE PROCEDURE AddVehicle
+  @Make VARCHAR(50),
+    @Model VARCHAR(50),
+    @Year INT,
+    @Color VARCHAR(20),
+    @Type VARCHAR(20)
+AS
+BEGIN
+    INSERT INTO Vehicles (Make, Model, Year, Color, Type, RentStatus, SaleStatus)
+    VALUES (@Make, @Model, @Year, @Color, @Type, 'available', 'available')
+END
+
+CREATE PROCEDURE sp_UpdateVehicleStatus
+    @VehicleID INT,
+    @RentStatus VARCHAR(10),
+    @SaleStatus VARCHAR(10)
+AS
+BEGIN
+    UPDATE Vehicles
+    SET RentStatus = @RentStatus, SaleStatus = @SaleStatus
+    WHERE VehicleID = @VehicleID
+END
+
+
+CREATE PROCEDURE AddCustomer
+    @Name VARCHAR(100),
+    @Email VARCHAR(100),
+    @Phone VARCHAR(20),
+    @Address VARCHAR(200)
+AS
+BEGIN
+    INSERT INTO Customers (Name, Email, Phone, Address)
+    VALUES (@Name, @Email, @Phone, @Address)
+END
+
+CREATE PROCEDURE InsertNewEmployee
+    @Name VARCHAR(100),
+    @Email VARCHAR(100),
+    @Phone VARCHAR(20),
+    @Role VARCHAR(20)
+AS
+BEGIN
+    INSERT INTO Employees (Name, Email, Phone, Role)
+    VALUES (@Name, @Email, @Phone, @Role)
+END
+
+CREATE PROCEDURE AddNewSale
+    @VehicleID INT,
+    @CustomerID INT,
+    @SaleDate DATE,
+    @Price DECIMAL(10, 2)
+AS
+BEGIN
+    INSERT INTO Sales (VehicleID, CustomerID, SaleDate, Price)
+    VALUES (@VehicleID, @CustomerID, @SaleDate, @Price)
+
+    UPDATE Vehicles
+    SET SaleStatus = 'sold'
+    WHERE VehicleID = @VehicleID
+END
+
+
+CREATE PROCEDURE AddNewRental
+    @VehicleID INT,
+    @CustomerID INT,
+    @RentalDate DATE,
+    @ReturnDate DATE,
+    @RentalFee DECIMAL(10, 2)
+AS
+BEGIN
+    INSERT INTO Rentals (VehicleID, CustomerID, RentalDate, ReturnDate, RentalFee)
+    VALUES (@VehicleID, @CustomerID, @RentalDate, @ReturnDate, @RentalFee)
+
+    UPDATE Vehicles
+    SET RentStatus = 'rented'
+    WHERE VehicleID = @VehicleID
+END
+
+CREATE PROCEDURE CheckCustomerRentHistory
+    @CustomerID INT
+AS
+BEGIN
+    SELECT 
+        c.Name, 
+        v.Make, 
+        v.Model, 
+        v.Year, 
+        v.Color, 
+        v.Type, 
+        r.RentalDate, 
+        r.ReturnDate, 
+        r.RentalFee
+    FROM 
+        Customers c
+    INNER JOIN 
+        Rentals r ON c.CustomerID = r.CustomerID
+    INNER JOIN 
+        Vehicles v ON r.VehicleID = v.VehicleID
+    WHERE 
+        c.CustomerID = @CustomerID
+END
+
+
+CREATE PROCEDURE CheckCustomerPurchaseHistory
+    @CustomerID INT
+AS
+BEGIN
+    SELECT 
+        c.Name, 
+        v.Make, 
+        v.Model, 
+        v.Year, 
+        v.Color, 
+        v.Type, 
+        s.SaleDate, 
+        s.Price
+    FROM 
+        Customers c
+    INNER JOIN 
+        Sales s ON c.CustomerID = s.CustomerID
+    INNER JOIN 
+        Vehicles v ON s.VehicleID = v.VehicleID
+    WHERE 
+        c.CustomerID = @CustomerID
+END
+
+
+CREATE PROCEDURE VehicleHistory
+    @VehicleID INT
+AS
+BEGIN
+    SELECT 
+        'Rent' AS TransactionType,
+        r.RentalDate,
+        r.ReturnDate,
+        r.RentalFee AS Price
+    FROM 
+        Rentals r
+    WHERE 
+        r.VehicleID = @VehicleID
+
+    UNION ALL
+
+    SELECT 
+        'Sale' AS TransactionType,
+        s.SaleDate,
+        NULL AS ReturnDate,
+        s.Price
+    FROM 
+        Sales s
+    WHERE 
+        s.VehicleID = @VehicleID
+END
+
+CREATE PROCEDURE AddServiceRecord
+    @VehicleID INT,
+    @CustomerID INT,
+    @ServiceDate DATE,
+    @ServiceType VARCHAR(50),
+    @Cost DECIMAL(10, 2)
+AS
+BEGIN
+    INSERT INTO ServiceRecords (VehicleID, CustomerID, ServiceDate, ServiceType, Cost)
+    VALUES (@VehicleID, @CustomerID, @ServiceDate, @ServiceType, @Cost)
+END
+
+
+--creating triggers
+
+CREATE TRIGGER UpdateVehicleStatusOnSale
+ON Sales
+AFTER INSERT
+AS
+BEGIN
+    UPDATE v
+    SET v.SaleStatus = 'sold'
+    FROM Vehicles v
+    INNER JOIN inserted i ON v.VehicleID = i.VehicleID
+END
+
+
+CREATE TRIGGER UpdateVehicleStatusOnRental
+ON Rentals
+AFTER INSERT
+AS
+BEGIN
+    UPDATE v
+    SET v.RentStatus = 'rented'
+    FROM Vehicles v
+    INNER JOIN inserted i ON v.VehicleID = i.VehicleID
+END
+
+CREATE TRIGGER UpdateVehicleStatusOnRentalReturn
+ON Rentals
+AFTER UPDATE
+AS
+BEGIN
+    IF UPDATE(ReturnDate)
+    BEGIN
+        UPDATE v
+        SET v.RentStatus = 'available'
+        FROM Vehicles v
+        INNER JOIN inserted i ON v.VehicleID = i.VehicleID
+    END
+END
+
+--query
+UPDATE Rentals
+SET ReturnDate = '2020-07-20'
+WHERE RentalID = 7;
+
+
+
+CREATE TRIGGER Prevent_Sale_Sold_Car
+ON Sales
+INSTEAD OF INSERT
+AS
+BEGIN
+    IF EXISTS (
+        SELECT 1
+        FROM inserted i
+        INNER JOIN Vehicles v ON i.VehicleID = v.VehicleID
+        WHERE v.SaleStatus = 'sold'
+    )
+    BEGIN
+        RAISERROR ('Cannot sell a car that is already sold.', 16, 1);
+    END
+    ELSE
+    BEGIN
+        INSERT INTO Sales (SaleID, VehicleID, CustomerID, SaleDate, Price)
+        SELECT SaleID, VehicleID, CustomerID, SaleDate, Price
+        FROM inserted;
+
+        UPDATE Vehicles
+        SET SaleStatus = 'sold'
+        WHERE VehicleID IN (SELECT VehicleID FROM inserted);
+    END
+END;
+
+
+
+CREATE TRIGGER PreventInsertionOfDuplicateVehicle
+ON Vehicles
+INSTEAD OF INSERT
+AS
+BEGIN
+    IF EXISTS (
+        SELECT 1
+        FROM inserted i
+        INNER JOIN Vehicles v ON i.Make = v.Make AND i.Model = v.Model AND i.Year = v.Year
+    )
+    BEGIN
+        RAISERROR ('Vehicle already exists.', 16, 1)
+        ROLLBACK TRANSACTION
+    END
+    ELSE
+    BEGIN
+        INSERT INTO Vehicles (Make, Model, Year, Color, Type, RentStatus, SaleStatus)
+        SELECT Make, Model, Year, Color, Type, RentStatus, SaleStatus
+        FROM inserted
+    END
+END
+
+--query
+INSERT INTO Vehicles (Make, Model, Year, Color, Type, RentStatus, SaleStatus)
+VALUES ('Toyota', 'Corolla', 2015, 'White', 'Sedan', 'available', 'available');
+
+
+CREATE TRIGGER PreventDeletionOfVehicle
+ON Vehicles
+INSTEAD OF DELETE
+AS
+BEGIN
+    IF EXISTS (
+        SELECT 1
+        FROM deleted d
+        INNER JOIN Rentals r ON d.VehicleID = r.VehicleID
+        WHERE r.ReturnDate IS NULL
+    ) OR EXISTS (
+        SELECT 1
+        FROM deleted d
+        INNER JOIN Sales s ON d.VehicleID = s.VehicleID
+    )
+    BEGIN
+        RAISERROR ('Cannot delete vehicle with active rentals or sales.', 16, 1)
+        ROLLBACK TRANSACTION
+    END
+    ELSE
+    BEGIN
+        DELETE FROM Vehicles
+        WHERE VehicleID IN (SELECT VehicleID FROM deleted)
+    END
+END
+
+--query
+DELETE FROM Vehicles
+WHERE VehicleID = 11;
+
+
+/*drop trigger PreventRentalOfSoldVehicle;
+
+CREATE TRIGGER PreventRentalOfSoldVehicle
+ON Rentals
+INSTEAD OF INSERT
+AS
+BEGIN
+    IF EXISTS (
+        SELECT 1
+        FROM inserted i
+        INNER JOIN Vehicles v ON i.VehicleID = v.VehicleID
+        WHERE v.SaleStatus = 'sold'
+    )
+    BEGIN
+        RAISERROR ('Cannot rent a vehicle that has already been sold.', 16, 1)
+        ROLLBACK TRANSACTION
+    END
+    ELSE
+    BEGIN
+        INSERT INTO Rentals (VehicleID, CustomerID, RentalDate, ReturnDate, RentalFee)
+        SELECT VehicleID, CustomerID, RentalDate, ReturnDate, RentalFee
+        FROM inserted
+    END
+END
+*/
+CREATE TRIGGER PreventRentalOfSoldOrRentedVehicle
+ON Rentals
+INSTEAD OF INSERT
+AS
+BEGIN
+    IF EXISTS (
+        SELECT 1
+        FROM inserted i
+        INNER JOIN Vehicles v ON i.VehicleID = v.VehicleID
+        WHERE v.SaleStatus = 'sold'
+    )
+    OR EXISTS (
+        SELECT 1
+        FROM inserted i
+        INNER JOIN Rentals r ON i.VehicleID = r.VehicleID
+        WHERE r.ReturnDate IS NULL
+    )
+    BEGIN
+        RAISERROR ('Cannot rent a vehicle that has already been sold or rented.', 16, 1)
+        ROLLBACK TRANSACTION
+    END
+    ELSE
+    BEGIN
+        INSERT INTO Rentals (VehicleID, CustomerID, RentalDate, ReturnDate, RentalFee)
+        SELECT VehicleID, CustomerID, RentalDate, ReturnDate, RentalFee
+        FROM inserted
+    END
+END;
+
+/*drop trigger Prevent_Rent_Rented_Car;
+CREATE TRIGGER Prevent_Rent_Rented_Car
+ON Rentals
+AFTER INSERT
+AS
+BEGIN
+    IF EXISTS (
+        SELECT 1
+        FROM inserted i
+        INNER JOIN Rentals r ON i.VehicleID = r.VehicleID
+        WHERE r.ReturnDate IS NULL
+    )
+    BEGIN
+        RAISERROR ('Cannot rent a car that is already rented.', 16, 1);
+        ROLLBACK TRANSACTION;
+    END
+END;*/
+
+
+
+CREATE TRIGGER PreventDeletionOfCustomer
+ON Customers
+INSTEAD OF DELETE
+AS
+BEGIN
+    IF EXISTS (
+        SELECT 1
+        FROM deleted d
+        INNER JOIN Sales s ON d.CustomerID = s.CustomerID
+        WHERE s.SaleDate IS NOT NULL
+    ) OR EXISTS (
+        SELECT 1
+        FROM deleted d
+        INNER JOIN Rentals r ON d.CustomerID = r.CustomerID
+        WHERE r.RentalDate IS NOT NULL
+    )
+    BEGIN
+        RAISERROR ('Cannot delete customer with active sales or rentals.', 16, 1)
+        ROLLBACK TRANSACTION
+    END
+    ELSE
+    BEGIN
+        DELETE FROM Customers
+        WHERE CustomerID IN (SELECT CustomerID FROM deleted)
+    END
+END
+
+
+--query
+DELETE FROM Customers
+WHERE CustomerID =3;
+
+select * from Sales;
+
+--horizontal  fragmentation
+CREATE TABLE Vehicles_Sedan (
+    VehicleID INT PRIMARY KEY,
+    Make VARCHAR(50) NOT NULL,
+    Model VARCHAR(50) NOT NULL,
+    Year INT NOT NULL,
+    Color VARCHAR(20) NOT NULL,
+    Type VARCHAR(20) NOT NULL,
+    RentStatus VARCHAR(10) CHECK (RentStatus IN ('available', 'rented')),
+    SaleStatus VARCHAR(10) CHECK (SaleStatus IN ('available', 'sold'))
+);
+
+CREATE TABLE Vehicles_Truck (
+    VehicleID INT PRIMARY KEY,
+    Make VARCHAR(50) NOT NULL,
+    Model VARCHAR(50) NOT NULL,
+    Year INT NOT NULL,
+    Color VARCHAR(20) NOT NULL,
+    Type VARCHAR(20) NOT NULL,
+    RentStatus VARCHAR(10) CHECK (RentStatus IN ('available', 'rented')),
+    SaleStatus VARCHAR(10) CHECK (SaleStatus IN ('available', 'sold'))
+);
+
+CREATE TABLE Vehicles_Hatchback (
+    VehicleID INT PRIMARY KEY,
+    Make VARCHAR(50) NOT NULL,
+    Model VARCHAR(50) NOT NULL,
+    Year INT NOT NULL,
+    Color VARCHAR(20) NOT NULL,
+    Type VARCHAR(20) NOT NULL,
+    RentStatus VARCHAR(10) CHECK (RentStatus IN ('available', 'rented')),
+    SaleStatus VARCHAR(10) CHECK (SaleStatus IN ('available', 'sold'))
+);
+
+INSERT INTO Vehicles_Sedan (VehicleID, Make, Model, Year, Color, Type, RentStatus, SaleStatus)
+SELECT VehicleID, Make, Model, Year, Color, Type, RentStatus, SaleStatus
+FROM Vehicles
+WHERE Type = 'Sedan';
+
+INSERT INTO Vehicles_Truck (VehicleID, Make, Model, Year, Color, Type, RentStatus, SaleStatus)
+SELECT VehicleID, Make, Model, Year, Color, Type, RentStatus, SaleStatus
+FROM Vehicles
+WHERE Type = 'Truck';
+
+INSERT INTO Vehicles_Hatchback (VehicleID, Make, Model, Year, Color, Type, RentStatus, SaleStatus)
+SELECT VehicleID, Make, Model, Year, Color, Type, RentStatus, SaleStatus
+FROM Vehicles
+WHERE Type = 'Hatchback';
+
+
+
+
+
+--vertical fragmentation
+CREATE TABLE Vehicles_Main (
+    VehicleID INT PRIMARY KEY,
+    Make VARCHAR(50) NOT NULL,
+    Model VARCHAR(50) NOT NULL,
+    Year INT NOT NULL
+);
+
+CREATE TABLE Vehicles_Details (
+    VehicleID INT PRIMARY KEY,
+    Color VARCHAR(20) NOT NULL,
+    Type VARCHAR(20) NOT NULL,
+    RentStatus VARCHAR(10) CHECK (RentStatus IN ('available', 'rented')),
+    SaleStatus VARCHAR(10) CHECK (SaleStatus IN ('available', 'sold'))
+);
+
+INSERT INTO Vehicles_Main (VehicleID, Make, Model, Year)
+SELECT VehicleID, Make, Model, Year
+FROM Vehicles;
+
+INSERT INTO Vehicles_Details (VehicleID, Color, Type, RentStatus, SaleStatus)
+SELECT VehicleID, Color, Type, RentStatus, SaleStatus
+FROM Vehicles;
+
+
+
+--creating views
+--view to display available vehicles
+/*CREATE VIEW v_AvailableVehicles
+AS
+SELECT *
+FROM Vehicles
+WHERE RentStatus = 'available' AND SaleStatus = 'available'
+
+
+
+--view to display rent vehicle
+CREATE VIEW RentedVehicles
+AS
+SELECT *
+FROM Vehicles
+WHERE RentStatus = 'rented'
+
+--view to display sold vehicle
+CREATE VIEW SoldVehicles
+AS
+SELECT *
+FROM Vehicles
+WHERE SaleStatus = 'sold'
+
+
+--view customer vehicle details
+CREATE VIEW Customer_Vehicle_History AS
+SELECT c.CustomerID, c.Name, v.VehicleID, v.Make, v.Model, v.Year, v.Color, v.Type, s.SaleDate, r.RentalDate
+FROM Customers c
+LEFT JOIN Sales s ON c.CustomerID = s.CustomerID
+LEFT JOIN Rentals r ON c.CustomerID = r.CustomerID
+LEFT JOIN Vehicles v ON s.VehicleID = v.VehicleID OR r.VehicleID = v.VehicleID;
+
+
+
+--view vehicle service records
+CREATE VIEW Vehicle_Service_History AS
+SELECT v.VehicleID, v.Make, v.Model, v.Year, v.Color, v.Type, sr.ServiceDate, sr.ServiceType, sr.Cost
+FROM Vehicles v
+INNER JOIN ServiceRecords sr ON v.VehicleID = sr.VehicleID;*/
+
+
+
+--triggers to update fragments table when base table update
+/*CREATE TRIGGER trg_Update_Vehicles ON Vehicles
+AFTER UPDATE
+AS
+BEGIN
+    UPDATE vm
+    SET vm.Make = i.Make, vm.Model = i.Model, vm.Year = i.Year
+    FROM Vehicles_Main vm
+    INNER JOIN inserted i ON vm.VehicleID = i.VehicleID;
+
+    UPDATE vd
+    SET vd.Color = i.Color, vd.Type = i.Type, vd.RentStatus = i.RentStatus, vd.SaleStatus = i.SaleStatus
+    FROM Vehicles_Details vd
+    INNER JOIN inserted i ON vd.VehicleID = i.VehicleID;
+END;
+
+CREATE TRIGGER trg_Insert_Vehicles ON Vehicles
+AFTER INSERT
+AS
+BEGIN
+    INSERT INTO Vehicles_Main (VehicleID, Make, Model, Year)
+    SELECT i.VehicleID, i.Make, i.Model, i.Year
+    FROM inserted i;
+
+    INSERT INTO Vehicles_Details (VehicleID, Color, Type, RentStatus, SaleStatus)
+    SELECT i.VehicleID, i.Color, i.Type, i.RentStatus, i.SaleStatus
+    FROM inserted i;
+END;
+
+
+CREATE TRIGGER trg_Delete_Vehicles ON Vehicles
+AFTER DELETE
+AS
+BEGIN
+    DELETE vm
+    FROM Vehicles_Main vm
+    INNER JOIN deleted d ON vm.VehicleID = d.VehicleID;
+
+    DELETE vd
+    FROM Vehicles_Details vd
+    INNER JOIN deleted d ON vd.VehicleID = d.VehicleID;
+END;*/
+
+
+
+
+
+select * from Vehicles;
+select * from Customers;
+select * from Sales;
+select * from Rentals;
+select * from Employees;
+select * from Vehicles_Sedan;
+select * from Vehicles_Truck;
+select * from Vehicles_Hatchback;
+
+INSERT INTO Vehicles (Make, Model, Year, Color, Type, RentStatus, SaleStatus)
+VALUES 
+('Ford', 'F-150', 2012, 'Black', 'Truck', 'available', 'available'),
+
+
+
+
+
+/*DROP TABLE Vehicles_Sedan;
+DROP TABLE Vehicles_Truck;
+DROP TABLE Vehicles_Hatchback;
+
+DROP TABLE Vehicles_Main;
+DROP TABLE Vehicles_Details;
+DROP TRIGGER trg_Update_Vehicles;
+DROP TRIGGER trg_Insert_Vehicles;
+DROP TRIGGER trg_Delete_Vehicles */ 
+
+INSERT INTO Sales (VehicleID, CustomerID, SaleDate, Price)
+VALUES 
+(11, 4, '2020-01-19', 14000.00);
+
+SELECT * FROM Vehicle_Service_History;
+
+INSERT INTO Rentals (VehicleID, CustomerID, RentalDate, ReturnDate, RentalFee)
+VALUES 
+(11, 4, '2020-01-20', '2020-01-22', 400.00);
+
+delete from Rentals
+where RentalID=13;
+
+
+
+part 2
+
+--creating database
+CREATE DATABASE AutomobileManagementSystem;
+
+USE AutomobileManagementSystem;
+
+--creating tables
+CREATE TABLE Vehicles (
+    VehicleID INT PRIMARY KEY IDENTITY(1,1),
+    Make VARCHAR(50) NOT NULL,
+    Model VARCHAR(50) NOT NULL,
+    Year INT NOT NULL,
+    Color VARCHAR(20) NOT NULL,
+    Type VARCHAR(20) NOT NULL,
+    RentStatus VARCHAR(10) CHECK (RentStatus IN ('available', 'rented')),
+    SaleStatus VARCHAR(10) CHECK (SaleStatus IN ('available', 'sold'))
+);
+
+CREATE TABLE Customers (
+    CustomerID INT PRIMARY KEY IDENTITY(1,1),
+    Name VARCHAR(100) NOT NULL,
+    Email VARCHAR(100) UNIQUE NOT NULL,
+    Phone VARCHAR(20) NOT NULL,
+    Address VARCHAR(200) NOT NULL
+);
+
+CREATE TABLE Sales (
+    SaleID INT PRIMARY KEY IDENTITY(1,1),
+    VehicleID INT NOT NULL,
+    CustomerID INT NOT NULL,
+    SaleDate DATE NOT NULL,
+    Price DECIMAL(10, 2) NOT NULL,
+    CONSTRAINT FK_Sales_Vehicles FOREIGN KEY (VehicleID) REFERENCES Vehicles(VehicleID),
+    CONSTRAINT FK_Sales_Customers FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+);
+
+CREATE TABLE Rentals (
+    RentalID INT PRIMARY KEY IDENTITY(1,1),
+    VehicleID INT NOT NULL,
+    CustomerID INT NOT NULL,
+    RentalDate DATE NOT NULL,
+    ReturnDate DATE,
+    RentalFee DECIMAL(10, 2) NOT NULL,
+    CONSTRAINT FK_Rentals_Vehicles FOREIGN KEY (VehicleID) REFERENCES Vehicles(VehicleID),
+    CONSTRAINT FK_Rentals_Customers FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+);
+
+CREATE TABLE ServiceRecords (
+    ServiceID INT PRIMARY KEY IDENTITY(1,1),
+    VehicleID INT NOT NULL,
+    CustomerID INT NOT NULL,
+    ServiceDate DATE NOT NULL,
+    ServiceType VARCHAR(50) NOT NULL,
+    Cost DECIMAL(10, 2) NOT NULL,
+    CONSTRAINT FK_ServiceRecords_Vehicles FOREIGN KEY (VehicleID) REFERENCES Vehicles(VehicleID),
+    CONSTRAINT FK_ServiceRecords_Customers FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID)
+);
+
+CREATE TABLE Employees (
+    EmployeeID INT PRIMARY KEY IDENTITY(1,1),
+    Name VARCHAR(100) NOT NULL,
+    Email VARCHAR(100) UNIQUE NOT NULL,
+    Phone VARCHAR(20) NOT NULL,
+    Role VARCHAR(20) NOT NULL
+);
+
+
+--inserting records
+
+INSERT INTO Vehicles (Make, Model, Year, Color, Type, RentStatus, SaleStatus)
+VALUES 
+('Toyota', 'Corolla', 2015, 'White', 'Sedan', 'available', 'available'),
+('Honda', 'Civic', 2018, 'Black', 'Sedan', 'available', 'available'),
+('Ford', 'Fusion', 2012, 'Silver', 'Sedan', 'available', 'available'),
+('Hyundai', 'Elantra', 2019, 'Red', 'Sedan', 'available', 'available'),
+('Nissan', 'Altima', 2014, 'Gray', 'Sedan', 'available', 'available'),
+('Toyota', 'Camry', 2016, 'Blue', 'Sedan', 'available', 'available'),
+('Honda', 'Accord', 2017, 'White', 'Sedan', 'available', 'available'),
+('Ford', 'Focus', 2013, 'Black', 'Hatchback', 'available', 'available'),
+('Hyundai', 'Sonata', 2018, 'Silver', 'Sedan', 'available', 'available'),
+('Nissan', 'Sentra', 2015, 'Red', 'Sedan', 'available', 'available');
+
+
+INSERT INTO Customers (Name, Email, Phone, Address)
+VALUES 
+('Ahmed Khan', 'ahmed.khan@example.com', '123-456-7890', 'Shamsabad'),
+('Ahsan Ali', 'ahsan.ali@example.com', '987-654-3210', 'Rehmanabad'),
+('Ali Hamza', 'ali.hamza@example.com', '555-123-4567', 'Islamabad'),
+('Anas Shah', 'anas.shah@example.com', '901-234-5678', 'Bahria Town'),
+('Haider Ali', 'haider.ali@example.com', '111-222-3333', 'Shamsabad'),
+('Hanan Khan', 'hanan.khan@example.com', '666-777-8888', 'Rehmanabad'),
+('Malik Arham', 'malik.arham@example.com', '333-444-5555', 'Islamabad'),
+('Ch Aqib', 'ch.aqib@example.com', '777-888-9999', 'Bahria Town'),
+('Imran Khan', 'imran.khan@example.com', '888-999-0000', 'Shamsabad'),
+('Zain Habib', 'zain.habib@example.com', '999-000-1111', 'Rehmanabad');
+
+
+
+INSERT INTO Sales (VehicleID, CustomerID, SaleDate, Price)
+VALUES 
+(1, 1, '2020-01-01', 15000.00),
+(2, 2, '2020-02-01', 18000.00),
+(3, 3, '2020-03-01', 12000.00),
+(4, 4, '2020-04-01', 20000.00),
+(5, 5, '2020-05-01', 25000.00),
+(6, 6, '2020-06-01', 22000.00),
+(7, 7, '2020-07-01', 28000.00),
+(8, 8, '2020-08-01', 30000.00),
+(9, 9, '2020-09-01', 35000.00),
+(10, 10, '2020-10-01', 38000.00);
+
+INSERT INTO Rentals (VehicleID, CustomerID, RentalDate, ReturnDate, RentalFee)
+VALUES 
+(1, 1, '2020-01-01', '2020-01-15', 500.00),
+(2, 2, '2020-02-01', '2020-02-15', 600.00),
+(3, 3, '2020-03-01', '2020-03-15', 400.00),
+(4, 4, '2020-04-01', '2020-04-15', 700.00),
+(5, 5, '2020-05-01', '2020-05-15', 800.00),
+(6, 6, '2020-06-01', '2020-06-15', 900.00),
+(7, 7, '2020-07-01', '2020-07-15', 1000.00),
+(8, 8, '2020-08-01', '2020-08-15', 1100.00),
+(9, 9, '2020-09-01', '2020-09-15', 1200.00),
+(10, 10, '2020-10-01', '2020-10-15', 1300.00);
+
+
+INSERT INTO ServiceRecords (VehicleID, CustomerID, ServiceDate, ServiceType, Cost)
+VALUES 
+(1, 1, '2020-01-01', 'Oil Change', 50.00),
+(2, 2, '2020-02-01', 'Tire Rotation', 30.00),
+(3, 3, '2020-03-01', 'Brake Repair', 200.00),
+(4, 4, '2020-04-01', 'Battery Replacement', 100.00),
+(5, 5, '2020-05-01', 'Oil Change', 50.00),
+(6, 6, '2020-06-01', 'Tire Rotation', 30.00),
+(7, 7, '2020-07-01', 'Brake Repair', 200.00),
+(8, 8, '2020-08-01', 'Engine Repair', 1000.00),
+(9, 9, '2020-09-01', 'Battery Replacement', 100.00),
+(10, 10, '2020-10-01', 'Oil Change', 50.00);
+
+INSERT INTO Employees (Name, Email, Phone, Role)
+VALUES 
+('Saif Ali', 'saif.ali@example.com', '123-456-7890', 'Salesperson'),
+('Ahad Khan', 'ahad.khan@example.com', '987-654-3210', 'Mechanic'),
+('Amir Khan', 'amir.khan@example.com', '555-123-4567', 'Service Manager'),
+('Salman Arif', 'salman.arif@example.com', '901-234-5678', 'Receptionist'),
+('Laraib Butt', 'laraib.butt@example.com', '111-222-3333', 'Sales Manager');
+
+
+
+--creating procedures
+
+
+/*CREATE PROCEDURE sp_AddVehicle
+    @Make VARCHAR(50),
+    @Model VARCHAR(50),
+    @Year INT,
+    @Color VARCHAR(20),
+    @Type VARCHAR(20)
+AS
+BEGIN
+    INSERT INTO Vehicles (Make, Model, Year, Color, Type, RentStatus, SaleStatus)
+    VALUES (@Make, @Model, @Year, @Color, @Type, 'available', 'available')
+END
+DROP PROCEDURE sp_AddVehicle;*/
+
+
+CREATE PROCEDURE AddVehicle
+  @Make VARCHAR(50),
+    @Model VARCHAR(50),
+    @Year INT,
+    @Color VARCHAR(20),
+    @Type VARCHAR(20)
+AS
+BEGIN
+    INSERT INTO Vehicles (Make, Model, Year, Color, Type, RentStatus, SaleStatus)
+    VALUES (@Make, @Model, @Year, @Color, @Type, 'available', 'available')
+END
+
+exec AddVehicle 'Honda', 'Civic', 2016, 'Grey', 'Sedan';
+
+/*CREATE PROCEDURE sp_UpdateVehicleStatus
+    @VehicleID INT,
+    @RentStatus VARCHAR(10),
+    @SaleStatus VARCHAR(10)
+AS
+BEGIN
+    UPDATE Vehicles
+    SET RentStatus = @RentStatus, SaleStatus = @SaleStatus
+    WHERE VehicleID = @VehicleID
+END
+
+exec sp_UpdateVehicleStatus 10,'available', 'sold';*/
+
+
+CREATE PROCEDURE AddCustomer
+    @Name VARCHAR(100),
+    @Email VARCHAR(100),
+    @Phone VARCHAR(20),
+    @Address VARCHAR(200)
+AS
+BEGIN
+    INSERT INTO Customers (Name, Email, Phone, Address)
+    VALUES (@Name, @Email, @Phone, @Address)
+END
+
+CREATE PROCEDURE InsertNewEmployee
+    @Name VARCHAR(100),
+    @Email VARCHAR(100),
+    @Phone VARCHAR(20),
+    @Role VARCHAR(20)
+AS
+BEGIN
+    INSERT INTO Employees (Name, Email, Phone, Role)
+    VALUES (@Name, @Email, @Phone, @Role)
+END
+
+exec InsertNewEmployee 'Massad Ali', 'massadali@gmail.com', '456-897-765', 'Saleperson';
+
+CREATE PROCEDURE AddNewSale
+    @VehicleID INT,
+    @CustomerID INT,
+    @SaleDate DATE,
+    @Price DECIMAL(10, 2)
+AS
+BEGIN
+    INSERT INTO Sales (VehicleID, CustomerID, SaleDate, Price)
+    VALUES (@VehicleID, @CustomerID, @SaleDate, @Price)
+
+    UPDATE Vehicles
+    SET SaleStatus = 'sold'
+    WHERE VehicleID = @VehicleID
+END
+
+
+CREATE PROCEDURE AddNewRental
+    @VehicleID INT,
+    @CustomerID INT,
+    @RentalDate DATE,
+    @ReturnDate DATE,
+    @RentalFee DECIMAL(10, 2)
+AS
+BEGIN
+    INSERT INTO Rentals (VehicleID, CustomerID, RentalDate, ReturnDate, RentalFee)
+    VALUES (@VehicleID, @CustomerID, @RentalDate, @ReturnDate, @RentalFee)
+
+    UPDATE Vehicles
+    SET RentStatus = 'rented'
+    WHERE VehicleID = @VehicleID
+END
+
+CREATE PROCEDURE CheckCustomerRentHistory
+    @CustomerID INT
+AS
+BEGIN
+    SELECT 
+        c.Name, 
+        v.Make, 
+        v.Model, 
+        v.Year, 
+        v.Color, 
+        v.Type, 
+        r.RentalDate, 
+        r.ReturnDate, 
+        r.RentalFee
+    FROM 
+        Customers c
+    INNER JOIN 
+        Rentals r ON c.CustomerID = r.CustomerID
+    INNER JOIN 
+        Vehicles v ON r.VehicleID = v.VehicleID
+    WHERE 
+        c.CustomerID = @CustomerID
+END
+exec CheckCustomerRentHistory 11;
+
+CREATE PROCEDURE CheckCustomerPurchaseHistory
+    @CustomerID INT
+AS
+BEGIN
+    SELECT 
+        c.Name, 
+        v.Make, 
+        v.Model, 
+        v.Year, 
+        v.Color, 
+        v.Type, 
+        s.SaleDate, 
+        s.Price
+    FROM 
+        Customers c
+    INNER JOIN 
+        Sales s ON c.CustomerID = s.CustomerID
+    INNER JOIN 
+        Vehicles v ON s.VehicleID = v.VehicleID
+    WHERE 
+        c.CustomerID = @CustomerID
+END
+
+exec CheckCustomerPurchaseHistory 8;
+
+CREATE PROCEDURE VehicleHistory
+    @VehicleID INT
+AS
+BEGIN
+    SELECT 
+        'Rent' AS TransactionType,
+        r.RentalDate,
+        r.ReturnDate,
+        r.RentalFee AS Price
+    FROM 
+        Rentals r
+    WHERE 
+        r.VehicleID = @VehicleID
+
+    UNION ALL
+
+    SELECT 
+        'Sale' AS TransactionType,
+        s.SaleDate,
+        NULL AS ReturnDate,
+        s.Price
+    FROM 
+        Sales s
+    WHERE 
+        s.VehicleID = @VehicleID
+END
+
+CREATE PROCEDURE AddServiceRecord
+    @VehicleID INT,
+    @CustomerID INT,
+    @ServiceDate DATE,
+    @ServiceType VARCHAR(50),
+    @Cost DECIMAL(10, 2)
+AS
+BEGIN
+    INSERT INTO ServiceRecords (VehicleID, CustomerID, ServiceDate, ServiceType, Cost)
+    VALUES (@VehicleID, @CustomerID, @ServiceDate, @ServiceType, @Cost)
+END
+exec AddServicerecord 3,5, '2020-10-10', 'Oil Change', 600.00;
+
+--creating triggers
+
+CREATE TRIGGER UpdateVehicleStatusOnSale
+ON Sales
+AFTER INSERT
+AS
+BEGIN
+    UPDATE v
+    SET v.SaleStatus = 'sold'
+    FROM Vehicles v
+    INNER JOIN inserted i ON v.VehicleID = i.VehicleID
+END
+
+
+CREATE TRIGGER UpdateVehicleStatusOnRental
+ON Rentals
+AFTER INSERT
+AS
+BEGIN
+    UPDATE v
+    SET v.RentStatus = 'rented'
+    FROM Vehicles v
+    INNER JOIN inserted i ON v.VehicleID = i.VehicleID
+END
+
+CREATE TRIGGER UpdateVehicleStatusOnRentalReturn
+ON Rentals
+AFTER UPDATE
+AS
+BEGIN
+    IF UPDATE(ReturnDate)
+    BEGIN
+        UPDATE v
+        SET v.RentStatus = 'available'
+        FROM Vehicles v
+        INNER JOIN inserted i ON v.VehicleID = i.VehicleID
+    END
+END
+
+--query
+UPDATE Rentals
+SET ReturnDate = '2020-10-20'
+WHERE RentalID = 10;
+
+ select * from Vehicles;
+ select * from Rentals;
+
+
+CREATE TRIGGER Prevent_Sale_Sold_Car
+ON Sales
+INSTEAD OF INSERT
+AS
+BEGIN
+    IF EXISTS (
+        SELECT 1
+        FROM inserted i
+        INNER JOIN Vehicles v ON i.VehicleID = v.VehicleID
+        WHERE v.SaleStatus = 'sold'
+    )
+    BEGIN
+        RAISERROR ('Cannot sell a car that is already sold.', 16, 1);
+    END
+    ELSE
+    BEGIN
+        INSERT INTO Sales (SaleID, VehicleID, CustomerID, SaleDate, Price)
+        SELECT SaleID, VehicleID, CustomerID, SaleDate, Price
+        FROM inserted;
+
+        UPDATE Vehicles
+        SET SaleStatus = 'sold'
+        WHERE VehicleID IN (SELECT VehicleID FROM inserted);
+    END
+END;
+
+/*drop trigger PreventInsertionOfDuplicateVehicle;
+
+CREATE TRIGGER PreventInsertionOfDuplicateVehicle
+ON Vehicles
+INSTEAD OF INSERT
+AS
+BEGIN
+    IF EXISTS (
+        SELECT 1
+        FROM inserted i
+        INNER JOIN Vehicles v ON i.Make = v.Make AND i.Model = v.Model AND i.Year = v.Year
+    )
+    BEGIN
+        RAISERROR ('Vehicle already exists.', 16, 1)
+        ROLLBACK TRANSACTION
+    END
+    ELSE
+    BEGIN
+        INSERT INTO Vehicles (Make, Model, Year, Color, Type, RentStatus, SaleStatus)
+        SELECT Make, Model, Year, Color, Type, RentStatus, SaleStatus
+        FROM inserted
+    END
+END
+
+--query
+INSERT INTO Vehicles (Make, Model, Year, Color, Type, RentStatus, SaleStatus)
+VALUES ('Toyota', 'Corolla', 2015, 'White', 'Sedan', 'available', 'available');*/
+
+
+CREATE TRIGGER PreventDeletionOfVehicle
+ON Vehicles
+INSTEAD OF DELETE
+AS
+BEGIN
+    IF EXISTS (
+        SELECT 1
+        FROM deleted d
+        INNER JOIN Rentals r ON d.VehicleID = r.VehicleID
+        WHERE r.ReturnDate IS NULL
+    ) OR EXISTS (
+        SELECT 1
+        FROM deleted d
+        INNER JOIN Sales s ON d.VehicleID = s.VehicleID
+    )
+    BEGIN
+        RAISERROR ('Cannot delete vehicle with active rentals or sales.', 16, 1)
+        ROLLBACK TRANSACTION
+    END
+    ELSE
+    BEGIN
+        DELETE FROM Vehicles
+        WHERE VehicleID IN (SELECT VehicleID FROM deleted)
+    END
+END
+
+--query
+DELETE FROM Vehicles
+WHERE VehicleID = 11;
+
+
+/*drop trigger PreventRentalOfSoldVehicle;
+
+CREATE TRIGGER PreventRentalOfSoldVehicle
+ON Rentals
+INSTEAD OF INSERT
+AS
+BEGIN
+    IF EXISTS (
+        SELECT 1
+        FROM inserted i
+        INNER JOIN Vehicles v ON i.VehicleID = v.VehicleID
+        WHERE v.SaleStatus = 'sold'
+    )
+    BEGIN
+        RAISERROR ('Cannot rent a vehicle that has already been sold.', 16, 1)
+        ROLLBACK TRANSACTION
+    END
+    ELSE
+    BEGIN
+        INSERT INTO Rentals (VehicleID, CustomerID, RentalDate, ReturnDate, RentalFee)
+        SELECT VehicleID, CustomerID, RentalDate, ReturnDate, RentalFee
+        FROM inserted
+    END
+END
+*/
+CREATE TRIGGER PreventRentalOfSoldOrRentedVehicle
+ON Rentals
+INSTEAD OF INSERT
+AS
+BEGIN
+    IF EXISTS (
+        SELECT 1
+        FROM inserted i
+        INNER JOIN Vehicles v ON i.VehicleID = v.VehicleID
+        WHERE v.SaleStatus = 'sold'
+    )
+    OR EXISTS (
+        SELECT 1
+        FROM inserted i
+        INNER JOIN Rentals r ON i.VehicleID = r.VehicleID
+        WHERE r.ReturnDate IS NULL
+    )
+    BEGIN
+        RAISERROR ('Cannot rent a vehicle that has already been sold or rented.', 16, 1)
+        ROLLBACK TRANSACTION
+    END
+    ELSE
+    BEGIN
+        INSERT INTO Rentals (VehicleID, CustomerID, RentalDate, ReturnDate, RentalFee)
+        SELECT VehicleID, CustomerID, RentalDate, ReturnDate, RentalFee
+        FROM inserted
+    END
+END;
+
+/*drop trigger Prevent_Rent_Rented_Car;
+CREATE TRIGGER Prevent_Rent_Rented_Car
+ON Rentals
+AFTER INSERT
+AS
+BEGIN
+    IF EXISTS (
+        SELECT 1
+        FROM inserted i
+        INNER JOIN Rentals r ON i.VehicleID = r.VehicleID
+        WHERE r.ReturnDate IS NULL
+    )
+    BEGIN
+        RAISERROR ('Cannot rent a car that is already rented.', 16, 1);
+        ROLLBACK TRANSACTION;
+    END
+END;*/
+
+
+
+CREATE TRIGGER PreventDeletionOfCustomer
+ON Customers
+INSTEAD OF DELETE
+AS
+BEGIN
+    IF EXISTS (
+        SELECT 1
+        FROM deleted d
+        INNER JOIN Sales s ON d.CustomerID = s.CustomerID
+        WHERE s.SaleDate IS NOT NULL
+    ) OR EXISTS (
+        SELECT 1
+        FROM deleted d
+        INNER JOIN Rentals r ON d.CustomerID = r.CustomerID
+        WHERE r.RentalDate IS NOT NULL
+    )
+    BEGIN
+        RAISERROR ('Cannot delete customer with active sales or rentals.', 16, 1)
+        ROLLBACK TRANSACTION
+    END
+    ELSE
+    BEGIN
+        DELETE FROM Customers
+        WHERE CustomerID IN (SELECT CustomerID FROM deleted)
+    END
+END
+
+
+--query
+DELETE FROM Customers
+WHERE CustomerID =3;
+
+select * from Sales;
+
+--horizontal  fragmentation
+CREATE TABLE Vehicles_Sedan (
+    VehicleID INT PRIMARY KEY,
+    Make VARCHAR(50) NOT NULL,
+    Model VARCHAR(50) NOT NULL,
+    Year INT NOT NULL,
+    Color VARCHAR(20) NOT NULL,
+    Type VARCHAR(20) NOT NULL,
+    RentStatus VARCHAR(10) CHECK (RentStatus IN ('available', 'rented')),
+    SaleStatus VARCHAR(10) CHECK (SaleStatus IN ('available', 'sold'))
+);
+
+CREATE TABLE Vehicles_Truck (
+    VehicleID INT PRIMARY KEY,
+    Make VARCHAR(50) NOT NULL,
+    Model VARCHAR(50) NOT NULL,
+    Year INT NOT NULL,
+    Color VARCHAR(20) NOT NULL,
+    Type VARCHAR(20) NOT NULL,
+    RentStatus VARCHAR(10) CHECK (RentStatus IN ('available', 'rented')),
+    SaleStatus VARCHAR(10) CHECK (SaleStatus IN ('available', 'sold'))
+);
+
+CREATE TABLE Vehicles_Hatchback (
+    VehicleID INT PRIMARY KEY,
+    Make VARCHAR(50) NOT NULL,
+    Model VARCHAR(50) NOT NULL,
+    Year INT NOT NULL,
+    Color VARCHAR(20) NOT NULL,
+    Type VARCHAR(20) NOT NULL,
+    RentStatus VARCHAR(10) CHECK (RentStatus IN ('available', 'rented')),
+    SaleStatus VARCHAR(10) CHECK (SaleStatus IN ('available', 'sold'))
+);
+
+INSERT INTO Vehicles_Sedan (VehicleID, Make, Model, Year, Color, Type, RentStatus, SaleStatus)
+SELECT VehicleID, Make, Model, Year, Color, Type, RentStatus, SaleStatus
+FROM Vehicles
+WHERE Type = 'Sedan';
+
+INSERT INTO Vehicles_Truck (VehicleID, Make, Model, Year, Color, Type, RentStatus, SaleStatus)
+SELECT VehicleID, Make, Model, Year, Color, Type, RentStatus, SaleStatus
+FROM Vehicles
+WHERE Type = 'Truck';
+
+INSERT INTO Vehicles_Hatchback (VehicleID, Make, Model, Year, Color, Type, RentStatus, SaleStatus)
+SELECT VehicleID, Make, Model, Year, Color, Type, RentStatus, SaleStatus
+FROM Vehicles
+WHERE Type = 'Hatchback';
+
+
+
+
+
+--vertical fragmentation
+CREATE TABLE Vehicles_Main (
+    VehicleID INT PRIMARY KEY,
+    Make VARCHAR(50) NOT NULL,
+    Model VARCHAR(50) NOT NULL,
+    Year INT NOT NULL
+);
+
+CREATE TABLE Vehicles_Details (
+    VehicleID INT PRIMARY KEY,
+    Color VARCHAR(20) NOT NULL,
+    Type VARCHAR(20) NOT NULL,
+    RentStatus VARCHAR(10) CHECK (RentStatus IN ('available', 'rented')),
+    SaleStatus VARCHAR(10) CHECK (SaleStatus IN ('available', 'sold'))
+);
+
+INSERT INTO Vehicles_Main (VehicleID, Make, Model, Year)
+SELECT VehicleID, Make, Model, Year
+FROM Vehicles;
+
+INSERT INTO Vehicles_Details (VehicleID, Color, Type, RentStatus, SaleStatus)
+SELECT VehicleID, Color, Type, RentStatus, SaleStatus
+FROM Vehicles;
+
+
+
+--creating views
+--view to display available vehicles
+/*CREATE VIEW v_AvailableVehicles
+AS
+SELECT *
+FROM Vehicles
+WHERE RentStatus = 'available' AND SaleStatus = 'available'
+
+
+
+--view to display rent vehicle
+CREATE VIEW RentedVehicles
+AS
+SELECT *
+FROM Vehicles
+WHERE RentStatus = 'rented'
+
+--view to display sold vehicle
+CREATE VIEW SoldVehicles
+AS
+SELECT *
+FROM Vehicles
+WHERE SaleStatus = 'sold'
+
+
+--view customer vehicle details
+CREATE VIEW Customer_Vehicle_History AS
+SELECT c.CustomerID, c.Name, v.VehicleID, v.Make, v.Model, v.Year, v.Color, v.Type, s.SaleDate, r.RentalDate
+FROM Customers c
+LEFT JOIN Sales s ON c.CustomerID = s.CustomerID
+LEFT JOIN Rentals r ON c.CustomerID = r.CustomerID
+LEFT JOIN Vehicles v ON s.VehicleID = v.VehicleID OR r.VehicleID = v.VehicleID;
+
+
+
+--view vehicle service records
+CREATE VIEW Vehicle_Service_History AS
+SELECT v.VehicleID, v.Make, v.Model, v.Year, v.Color, v.Type, sr.ServiceDate, sr.ServiceType, sr.Cost
+FROM Vehicles v
+INNER JOIN ServiceRecords sr ON v.VehicleID = sr.VehicleID;*/
+
+
+
+--triggers to update fragments table when base table update
+/*CREATE TRIGGER trg_Update_Vehicles ON Vehicles
+AFTER UPDATE
+AS
+BEGIN
+    UPDATE vm
+    SET vm.Make = i.Make, vm.Model = i.Model, vm.Year = i.Year
+    FROM Vehicles_Main vm
+    INNER JOIN inserted i ON vm.VehicleID = i.VehicleID;
+
+    UPDATE vd
+    SET vd.Color = i.Color, vd.Type = i.Type, vd.RentStatus = i.RentStatus, vd.SaleStatus = i.SaleStatus
+    FROM Vehicles_Details vd
+    INNER JOIN inserted i ON vd.VehicleID = i.VehicleID;
+END;
+
+CREATE TRIGGER trg_Insert_Vehicles ON Vehicles
+AFTER INSERT
+AS
+BEGIN
+    INSERT INTO Vehicles_Main (VehicleID, Make, Model, Year)
+    SELECT i.VehicleID, i.Make, i.Model, i.Year
+    FROM inserted i;
+
+    INSERT INTO Vehicles_Details (VehicleID, Color, Type, RentStatus, SaleStatus)
+    SELECT i.VehicleID, i.Color, i.Type, i.RentStatus, i.SaleStatus
+    FROM inserted i;
+END;
+
+
+CREATE TRIGGER trg_Delete_Vehicles ON Vehicles
+AFTER DELETE
+AS
+BEGIN
+    DELETE vm
+    FROM Vehicles_Main vm
+    INNER JOIN deleted d ON vm.VehicleID = d.VehicleID;
+
+    DELETE vd
+    FROM Vehicles_Details vd
+    INNER JOIN deleted d ON vd.VehicleID = d.VehicleID;
+END;*/
+
+
+
+
+
+select * from Vehicles;
+select * from Customers;
+select * from Sales;
+select * from Rentals;
+select * from Employees;
+select * from Vehicles_Sedan;
+select * from Vehicles_Truck;
+select * from Vehicles_Hatchback;
+
+INSERT INTO Vehicles (Make, Model, Year, Color, Type, RentStatus, SaleStatus)
+VALUES 
+('Honda', 'Civic', 2012, 'Black', 'Sedan', 'available', 'available');
+
+drop procedure UpdateVehicles_Details;
+
+
+
+/*DROP TABLE Vehicles_Sedan;
+DROP TABLE Vehicles_Truck;
+DROP TABLE Vehicles_Hatchback;
+
+DROP TABLE Vehicles_Main;
+DROP TABLE Vehicles_Details;
+DROP TRIGGER trg_Update_Vehicles;
+DROP TRIGGER trg_Insert_Vehicles;
+DROP TRIGGER trg_Delete_Vehicles */ 
+
+INSERT INTO Sales (VehicleID, CustomerID, SaleDate, Price)
+VALUES 
+(11, 4, '2020-01-19', 14000.00);
+
+SELECT * FROM Vehicle_Service_History;
+
+INSERT INTO Rentals (VehicleID, CustomerID, RentalDate, ReturnDate, RentalFee)
+VALUES 
+(11, 4, '2020-01-20', '2020-01-22', 400.00);
+
+delete from Rentals
+where RentalID=13;
+
+
+
+--fragments 
+-- Vehicles table ko do fragments mein divide karna
+CREATE TABLE Vehicles_Available (
+    VehicleID INT PRIMARY KEY,
+    Make VARCHAR(50) NOT NULL,
+    Model VARCHAR(50) NOT NULL,
+    Year INT NOT NULL,
+    Color VARCHAR(20) NOT NULL,
+    Type VARCHAR(20) NOT NULL,
+    RentStatus VARCHAR(10) CHECK (RentStatus IN ('available')),
+    SaleStatus VARCHAR(10) CHECK (SaleStatus IN ('available'))
+);
+
+CREATE TABLE Vehicles_Rented_Sold (
+    VehicleID INT PRIMARY KEY,
+    Make VARCHAR(50) NOT NULL,
+    Model VARCHAR(50) NOT NULL,
+    Year INT NOT NULL,
+    Color VARCHAR(20) NOT NULL,
+    Type VARCHAR(20) NOT NULL,
+    RentStatus VARCHAR(10) CHECK (RentStatus IN ('rented')),
+    SaleStatus VARCHAR(10) CHECK (SaleStatus IN ('sold'))
+);
+
+INSERT INTO Vehicles_Available (VehicleID, Make, Model, Year, Color, Type, RentStatus, SaleStatus)
+SELECT VehicleID, Make, Model, Year, Color, Type, RentStatus, SaleStatus
+FROM Vehicles
+WHERE RentStatus = 'available' AND SaleStatus = 'available';
+
+INSERT INTO Vehicles_Rented_Sold (VehicleID, Make, Model, Year, Color, Type, RentStatus, SaleStatus)
+SELECT VehicleID, Make, Model, Year, Color, Type, RentStatus, SaleStatus
+FROM Vehicles
+WHERE RentStatus = 'rented' OR SaleStatus = 'sold';
+
+CREATE TABLE Vehicles_Rented_Sold (
+    VehicleID INT PRIMARY KEY,
+    Make VARCHAR(50) NOT NULL,
+    Model VARCHAR(50) NOT NULL,
+    Year INT NOT NULL,
+    Color VARCHAR(20) NOT NULL,
+    Type VARCHAR(20) NOT NULL,
+    RentStatus VARCHAR(10) CHECK (RentStatus IN ('rented')),
+    SaleStatus VARCHAR(10) CHECK (SaleStatus IN ('sold', 'available'))
+);
+drop table Vehicles_Rented_Sold;
+CREATE TABLE Vehicles_Rented_Sold (
+    VehicleID INT PRIMARY KEY,
+    Make VARCHAR(50) NOT NULL,
+    Model VARCHAR(50) NOT NULL,
+    Year INT NOT NULL,
+    Color VARCHAR(20) NOT NULL,
+    Type VARCHAR(20) NOT NULL,
+    RentStatus VARCHAR(10) CHECK (RentStatus IN ('rented', 'available', 'sold')),
+    SaleStatus VARCHAR(10) CHECK (SaleStatus IN ('sold', 'available'))
+);
+
+INSERT INTO Vehicles_Rented_Sold (VehicleID, Make, Model, Year, Color, Type, RentStatus, SaleStatus)
+SELECT VehicleID, Make, Model, Year, Color, Type, RentStatus, SaleStatus
+FROM Vehicles
+WHERE RentStatus = 'rented' OR SaleStatus = 'sold';
+
+
+select * from Vehicles;
+
+
+
+--fragments triggers 
+
+
+CREATE TRIGGER UpdateVehicles_Available
+ON Vehicles
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    IF EXISTS (
+        SELECT 1
+        FROM inserted i
+        WHERE i.RentStatus = 'available' AND i.SaleStatus = 'available'
+    )
+    BEGIN
+        INSERT INTO Vehicles_Available (VehicleID, Make, Model, Year, Color, Type, RentStatus, SaleStatus)
+        SELECT VehicleID, Make, Model, Year, Color, Type, RentStatus, SaleStatus
+        FROM inserted
+        WHERE RentStatus = 'available' AND SaleStatus = 'available';
+    END
+
+    IF EXISTS (
+        SELECT 1
+        FROM deleted d
+        WHERE d.RentStatus = 'available' AND d.SaleStatus = 'available'
+    )
+    BEGIN
+        DELETE FROM Vehicles_Available
+        WHERE VehicleID IN (SELECT VehicleID FROM deleted WHERE RentStatus = 'available' AND SaleStatus = 'available');
+    END
+END
+
+CREATE TRIGGER UpdateVehicles_Rented_Sold
+ON Vehicles
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    IF EXISTS (
+        SELECT 1
+        FROM inserted i
+        WHERE i.RentStatus = 'rented' OR i.SaleStatus = 'sold'
+    )
+    BEGIN
+        INSERT INTO Vehicles_Rented_Sold (VehicleID, Make, Model, Year, Color, Type, RentStatus, SaleStatus)
+        SELECT VehicleID, Make, Model, Year, Color, Type, RentStatus, SaleStatus
+        FROM inserted
+        WHERE RentStatus = 'rented' OR SaleStatus = 'sold';
+    END
+
+    IF EXISTS (
+        SELECT 1
+        FROM deleted d
+        WHERE d.RentStatus = 'rented' OR d.SaleStatus = 'sold'
+    )
+    BEGIN
+        DELETE FROM Vehicles_Rented_Sold
+        WHERE VehicleID IN (SELECT VehicleID FROM deleted WHERE RentStatus = 'rented' OR SaleStatus = 'sold');
+    END
+END
+
+
+--display
+select * from Vehicles;
+SELECT * FROM Vehicles_Available;
+SELECT * FROM Vehicles_Rented_Sold;
+
+
+--queries
+
+INSERT INTO Vehicles (Make, Model, Year, Color, Type, RentStatus, SaleStatus)
+VALUES ('Honda', 'City', 2017, 'White', 'Sedan', 'available', 'available');
+
+UPDATE Vehicles
+SET RentStatus = 'rented'
+WHERE VehicleID = 1;
+
+DELETE FROM Vehicles
+WHERE VehicleID = 12;
+
+UPDATE Vehicles
+SET RentStatus = 'available'
+WHERE VehicleID = 1;
+
+
+--vertical fragmentation
+
+-- Vehicles table ko do fragments mein divide karna
+CREATE TABLE Vehicles_Details (
+    VehicleID INT PRIMARY KEY,
+    Make VARCHAR(50) NOT NULL,
+    Model VARCHAR(50) NOT NULL,
+    Year INT NOT NULL,
+    Color VARCHAR(20) NOT NULL,
+    Type VARCHAR(20) NOT NULL
+);
+
+CREATE TABLE Vehicles_Status (
+    VehicleID INT PRIMARY KEY,
+    RentStatus VARCHAR(10) CHECK (RentStatus IN ('available', 'rented')),
+    SaleStatus VARCHAR(10) CHECK (SaleStatus IN ('available', 'sold'))
+);
+
+-- Insert data into Vehicles_Details table
+INSERT INTO Vehicles_Details (VehicleID, Make, Model, Year, Color, Type)
+SELECT VehicleID, Make, Model, Year, Color, Type
+FROM Vehicles;
+
+-- Insert data into Vehicles_Status table
+INSERT INTO Vehicles_Status (VehicleID, RentStatus, SaleStatus)
+SELECT VehicleID, RentStatus, SaleStatus
+FROM Vehicles;
+
+
+CREATE TRIGGER UpdateVehicles_Details
+ON Vehicles
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    IF EXISTS (
+        SELECT 1
+        FROM inserted
+    )
+    BEGIN
+        INSERT INTO Vehicles_Details (VehicleID, Make, Model, Year, Color, Type)
+        SELECT VehicleID, Make, Model, Year, Color, Type
+        FROM inserted;
+    END
+
+    IF EXISTS (
+        SELECT 1
+        FROM deleted
+    )
+    BEGIN
+        DELETE FROM Vehicles_Details
+        WHERE VehicleID IN (SELECT VehicleID FROM deleted);
+    END
+
+    IF EXISTS (
+        SELECT 1
+        FROM inserted
+    )
+    BEGIN
+        UPDATE vd
+        SET vd.Make = i.Make,
+            vd.Model = i.Model,
+            vd.Year = i.Year,
+            vd.Color = i.Color,
+            vd.Type = i.Type
+        FROM Vehicles_Details vd
+        INNER JOIN inserted i ON vd.VehicleID = i.VehicleID;
+    END
+END
+
+CREATE TRIGGER UpdateVehicles_Status
+ON Vehicles
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    IF EXISTS (
+        SELECT 1
+        FROM inserted
+    )
+    BEGIN
+        INSERT INTO Vehicles_Status (VehicleID, RentStatus, SaleStatus)
+        SELECT VehicleID, RentStatus, SaleStatus
+        FROM inserted;
+    END
+
+    IF EXISTS (
+        SELECT 1
+        FROM deleted
+    )
+    BEGIN
+        DELETE FROM Vehicles_Status
+        WHERE VehicleID IN (SELECT VehicleID FROM deleted);
+    END
+
+    IF EXISTS (
+        SELECT 1
+        FROM updated
+    )
+    BEGIN
+        UPDATE vs
+        SET vs.RentStatus = i.RentStatus,
+            vs.SaleStatus = i.SaleStatus
+        FROM Vehicles_Status vs
+        INNER JOIN inserted i ON vs.VehicleID = i.VehicleID;
+    END
+END
+
+INSERT INTO Vehicles (Make, Model, Year, Color, Type, RentStatus, SaleStatus)
+VALUES ('Toyota', 'Camry', 2018, 'Black', 'Sedan', 'available', 'available');
+
+SELECT * FROM Vehicles_Details;
+SELECT * FROM Vehicles_Status;
+select * from Vehicles;
